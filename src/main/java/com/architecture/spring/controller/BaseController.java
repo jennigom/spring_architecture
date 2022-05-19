@@ -21,6 +21,4 @@ public class BaseController {
                 .result(result)
                 .build();
     }
-
-    // 코드 값 처리(메세지)
 }

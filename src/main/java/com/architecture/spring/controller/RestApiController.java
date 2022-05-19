@@ -4,6 +4,7 @@ import com.architecture.spring.dao.MemberDao;
 import com.architecture.spring.dto.MemberDto;
 import com.architecture.spring.dto.MemberSignUpDto;
 import com.architecture.spring.dto.MemberLoginDto;
+import com.architecture.spring.exception.ServiceException;
 import com.architecture.spring.model.response.ApiResponseModel;
 import com.architecture.spring.model.response.TokenInfoModel;
 import com.architecture.spring.security.JwtTokenProvider;
@@ -40,11 +41,11 @@ public class RestApiController extends BaseController {
     public ApiResponseModel signup(@RequestBody @ApiParam(value="회원가입할 때 필요한 회원 정보", required = true) @Valid MemberSignUpDto member) {
         try {
             MemberDto signupResult = memberService.signup(member);
-
-            if(signupResult == null) return getApiResponse("fail", "회원가입에 실패하였습니다.", "");
-            else return getApiResponse("success", "회원가입에 성공하였습니다.", signupResult);
+            return getApiResponse("success", "회원가입에 성공하였습니다.", signupResult);
+        } catch (ServiceException e) {
+            return getApiResponse("fail", e.getMessage(), "");
         } catch (Exception e) {
-            return getApiResponse("fail", "회원가입에 실패하였습니다.", e.getMessage());
+            return getApiResponse("fail", "회원가입에 실패하였습니다.", "");
         }
     }
 
@@ -53,9 +54,9 @@ public class RestApiController extends BaseController {
     public ApiResponseModel login(@RequestBody @ApiParam(value="로그인할 때 필요한 회원 정보", required = true) @Valid MemberLoginDto member) {
         try {
             TokenInfoModel loginResult = memberService.login(member);
-
-            if(loginResult == null) return getApiResponse("fail", "로그인에 실패하였습니다.", "");
-            else return getApiResponse("success", "로그인에 성공하였습니다.", loginResult);
+            return getApiResponse("success", "로그인에 성공하였습니다.", loginResult);
+        } catch (ServiceException e) {
+            return getApiResponse("fail", e.getMessage(), "");
         } catch (Exception e) {
             return getApiResponse("fail", "로그인에 실패하였습니다.", "");
         }
