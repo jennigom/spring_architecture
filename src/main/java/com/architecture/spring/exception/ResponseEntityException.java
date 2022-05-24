@@ -12,8 +12,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 /**
  * 특정 Exception(@Valid, ...)이 발생했을 때 ApiResponseModel로 return 해주기 위해 ResponseEntityExceptionHandler를 상속받아 수정한 handler
  * @author JENNI
- * @version 1.0
- * @since 2022.05.10
+ * @version 1.1
+ * @since 2022.05.19
  */
 
 @ControllerAdvice   // 모든 controller 영역에서 발생할 수 있는 예외를 잡아줌

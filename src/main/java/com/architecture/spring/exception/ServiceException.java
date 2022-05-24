@@ -11,19 +11,19 @@ import lombok.Getter;
 
 @Getter
 public class ServiceException extends Exception {
-    private ErrorCode errorCode;
+    private MessageCode messageCode;
 
     public ServiceException(){
         new Exception();
     }
 
-    public ServiceException(ErrorCode errorCode) {
-        super(errorCode.getStatus_message());
-        this.errorCode = errorCode;
+    public ServiceException(MessageCode messageCode) {
+        super(messageCode.getStatus_message());
+        this.messageCode = messageCode;
     }
 
-    public ServiceException(ErrorCode errorCode, String status_message) {
-        super(errorCode.getStatus_message(status_message));
-        this.errorCode = errorCode;
+    public ServiceException(MessageCode messageCode, String[] status_message) {
+        super(messageCode.getStatus_message(status_message));
+        this.messageCode = messageCode;
     }
 }

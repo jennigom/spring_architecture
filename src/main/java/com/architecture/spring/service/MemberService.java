@@ -5,7 +5,7 @@ import com.architecture.spring.dto.MemberDto;
 import com.architecture.spring.dto.MemberSignUpDto;
 import com.architecture.spring.dto.MemberLoginDto;
 import com.architecture.spring.entity.MemberEntity;
-import com.architecture.spring.exception.ErrorCode;
+import com.architecture.spring.exception.MessageCode;
 import com.architecture.spring.exception.ServiceException;
 import com.architecture.spring.model.response.TokenInfoModel;
 import com.architecture.spring.repository.MemberRepository;
@@ -44,16 +44,16 @@ public class MemberService {
         try {
             member.setRegNo((new AES256()).encrypt(member.getRegNo()));
         } catch (Exception e) {
-            throw new ServiceException(ErrorCode.회원가입);
+            throw new ServiceException(MessageCode.회원가입_실패);
         }
 
         // 회원 Id 중복 체크
         if (!memberDao.validateUserId(member.getUserId())) {
-            throw new ServiceException(ErrorCode.회원가입, "ID");
+            throw new ServiceException(MessageCode.회원가입_중복, new String[]{"ID"});
         }
         // 주민등록번호 중복 체크
         else if (!memberDao.validateRegNo(member.getRegNo())) {
-            throw new ServiceException(ErrorCode.회원가입, "주민등록번호");
+            throw new ServiceException(MessageCode.회원가입_중복, new String[]{"주민등록번호"});
         }
         // 가입 가능한 정보
         else {
@@ -79,14 +79,14 @@ public class MemberService {
 
         // 일치하는 Id가 없을 때
         if (memberEntity.isEmpty()) {
-            throw new ServiceException(ErrorCode.로그인_ID);
+            throw new ServiceException(MessageCode.로그인_ID);
         }
         // 일치하는 Id가 있을 때
         else {
             MemberEntity member = memberEntity.get();
             // 비밀번호가 틀렸을 때
             if (!passwordEncoder.matches(loginInfo.getPassword(), member.getPassword())) {
-                throw new ServiceException(ErrorCode.로그인_PASSWORD);
+                throw new ServiceException(MessageCode.로그인_PASSWORD);
             }
             // 비밀번호가 일치했을 때
             else {

@@ -17,6 +17,16 @@ public class BaseController {
     public ApiResponseModel getApiResponse(String success, String status_msg, Object result) {
         return ApiResponseModel.builder()
                 .success(success)
+                .message_code("")
+                .status_message(status_msg)
+                .result(result)
+                .build();
+    }
+
+    public ApiResponseModel getApiResponse(String success, String message_code, String status_msg, Object result) {
+        return ApiResponseModel.builder()
+                .success(success)
+                .message_code(message_code)
                 .status_message(status_msg)
                 .result(result)
                 .build();

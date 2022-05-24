@@ -4,6 +4,7 @@ import com.architecture.spring.dao.MemberDao;
 import com.architecture.spring.dto.MemberDto;
 import com.architecture.spring.dto.MemberSignUpDto;
 import com.architecture.spring.dto.MemberLoginDto;
+import com.architecture.spring.exception.MessageCode;
 import com.architecture.spring.exception.ServiceException;
 import com.architecture.spring.model.response.ApiResponseModel;
 import com.architecture.spring.model.response.TokenInfoModel;
@@ -41,11 +42,11 @@ public class RestApiController extends BaseController {
     public ApiResponseModel signup(@RequestBody @ApiParam(value="회원가입할 때 필요한 회원 정보", required = true) @Valid MemberSignUpDto member) {
         try {
             MemberDto signupResult = memberService.signup(member);
-            return getApiResponse("success", "회원가입에 성공하였습니다.", signupResult);
+            return getApiResponse("success", MessageCode.회원가입_성공.getCode(), MessageCode.회원가입_성공.getStatus_message(), signupResult);
         } catch (ServiceException e) {
-            return getApiResponse("fail", e.getMessage(), "");
+            return getApiResponse("fail", e.getMessageCode().getCode(), e.getMessage(), "");
         } catch (Exception e) {
-            return getApiResponse("fail", "회원가입에 실패하였습니다.", "");
+            return getApiResponse("fail", MessageCode.회원가입_실패.getCode(), MessageCode.회원가입_실패.getStatus_message(), "");
         }
     }
 
@@ -54,11 +55,11 @@ public class RestApiController extends BaseController {
     public ApiResponseModel login(@RequestBody @ApiParam(value="로그인할 때 필요한 회원 정보", required = true) @Valid MemberLoginDto member) {
         try {
             TokenInfoModel loginResult = memberService.login(member);
-            return getApiResponse("success", "로그인에 성공하였습니다.", loginResult);
+            return getApiResponse("success", MessageCode.로그인_성공.getCode(), MessageCode.로그인_성공.getStatus_message(), loginResult);
         } catch (ServiceException e) {
-            return getApiResponse("fail", e.getMessage(), "");
+            return getApiResponse("fail", e.getMessageCode().getCode(), e.getMessage(), "");
         } catch (Exception e) {
-            return getApiResponse("fail", "로그인에 실패하였습니다.", "");
+            return getApiResponse("fail", MessageCode.로그인_실패.getCode(), MessageCode.로그인_실패.getStatus_message(), "");
         }
     }
 
@@ -75,12 +76,12 @@ public class RestApiController extends BaseController {
             String userId = jwtTokenProvider.getUserPk(jwtToken);
             MemberDto member = memberDao.getMemberInfo(userId);
 
-            if(member == null) return getApiResponse("fail", "회원 정보 조회에 실패하였습니다.", "");
+            if(member == null) return getApiResponse("fail", MessageCode.회원_정보_조회.getCode(), MessageCode.회원_정보_조회.getStatus_message(), "");
             else return getApiResponse("success", "", member);
         }
         // token이 유효하지 않을 때
         else {
-            return getApiResponse("fail", "token이 유효하지 않습니다.", "");
+            return getApiResponse("fail", MessageCode.TOKEN_유효성.getCode(), MessageCode.TOKEN_유효성.getStatus_message(), "");
         }
     }
 
@@ -89,8 +90,8 @@ public class RestApiController extends BaseController {
     public ApiResponseModel search(@ApiParam(value="검색할 이름", required = true) String name) {
         List<MemberDto> members = memberDao.getSearchName(name);
 
-        if(members == null) return getApiResponse("fail", "회원 조회에 실패하였습니다.", "");
-        else if(members.isEmpty()) return getApiResponse("success", "조회된 회원이 없습니다.", "");
+        if(members == null) return getApiResponse("fail", MessageCode.회원_정보_조회.getCode(), MessageCode.회원_정보_조회.getStatus_message(), "");
+        else if(members.isEmpty()) return getApiResponse("fail", MessageCode.회원_정보_EMPTY.getCode(), MessageCode.회원_정보_EMPTY.getStatus_message(), "");
         else return getApiResponse("success", "", members);
     }
 }

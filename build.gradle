@@ -36,3 +36,13 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+/*
+bootJar {
+    mainClassName = "com.architecture.spring.SpringArchitectureApplication"
+}
+
+bootRun {
+
+}
+*/
